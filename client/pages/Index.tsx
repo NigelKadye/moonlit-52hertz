@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
+import BrandLockup from "@/components/BrandLockup";
 import {
   ArrowDownRight,
   ArrowRight,
@@ -49,15 +50,12 @@ export default function Index() {
     <main className="overflow-hidden bg-sand text-ink">
       <header className="absolute inset-x-0 top-0 z-30">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-6 lg:px-12">
-          <Link to="/" className="group flex items-center gap-3" aria-label="52Hertz home">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-ink text-lg font-bold text-lime transition-transform group-hover:scale-105">52</span>
-            <span className="text-lg font-semibold tracking-[-0.04em] text-white">hertz</span>
-          </Link>
+          <BrandLockup />
           <nav className="hidden items-center gap-8 text-sm font-medium text-white/75 md:flex">
             <Link to="/#about" className="transition hover:text-lime">About</Link>
             <Link to="/#method" className="transition hover:text-lime">Method</Link>
             <Link to="/#services" className="transition hover:text-lime">Services</Link>
-            <Link to="/find-our-book" className="transition hover:text-lime">Find our Book</Link>
+            <Link to="/find-my-book" className="transition hover:text-lime">Find My Book</Link>
             <Link to="/#contact" className="rounded-full border border-white/30 px-5 py-2.5 text-white transition hover:border-lime hover:bg-lime hover:text-ink">Start a conversation</Link>
           </nav>
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white md:hidden" aria-label="Toggle menu">
@@ -65,7 +63,7 @@ export default function Index() {
           </button>
         </div>
         {isMenuOpen && <nav className="mx-6 rounded-2xl bg-ink p-5 text-white shadow-2xl md:hidden">
-          {[["About", "/#about"], ["Method", "/#method"], ["Services", "/#services"], ["Find our Book", "/find-our-book"], ["Contact", "/#contact"]].map(([label, to]) => <Link key={label} to={to} onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">{label}<ChevronRight size={18} /></Link>)}
+          {[["About", "/#about"], ["Method", "/#method"], ["Services", "/#services"], ["Find My Book", "/find-my-book"], ["Contact", "/#contact"]].map(([label, to]) => <Link key={label} to={to} onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">{label}<ChevronRight size={18} /></Link>)}
         </nav>}
       </header>
 

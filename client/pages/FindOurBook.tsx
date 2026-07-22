@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { PaynowInitiateResponse } from "@shared/api";
+import BrandLockup from "@/components/BrandLockup";
 
 type PaymentForm = {
   customerName: string;
@@ -21,6 +22,7 @@ export default function FindOurBook() {
   const [form, setForm] = useState<PaymentForm>(initialForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showEnvKeys, setShowEnvKeys] = useState(false);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -52,27 +54,24 @@ export default function FindOurBook() {
   return (
     <main className="min-h-screen bg-sand text-ink">
       <header className="border-b border-ink/10 bg-ink text-white">
-        <div className="mx-auto flex max-w-[1320px] items-center justify-between px-6 py-5 lg:px-12">
-          <Link to="/" className="group flex items-center gap-3" aria-label="52Hertz home">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-lime text-lg font-bold text-ink transition-transform group-hover:scale-105">52</span>
-            <span className="text-lg font-semibold tracking-[-0.04em]">hertz</span>
-          </Link>
-          <Link to="/" className="text-sm font-semibold text-lime transition hover:text-white">
+        <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-12">
+          <BrandLockup />
+          <Link to="/" className="shrink-0 text-sm font-semibold text-lime transition hover:text-white">
             Back to home
           </Link>
         </div>
       </header>
 
-      <section className="px-6 py-16 lg:px-12 lg:py-24">
+      <section className="px-4 py-10 sm:px-6 sm:py-12 lg:px-12 lg:py-20">
         <div className="mx-auto max-w-[1320px]">
           <p className="eyebrow">Book</p>
-          <h1 className="section-title mt-5">Find our Book</h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-ink/70">
+          <h1 className="section-title mt-4">Find My Book</h1>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-ink/70 sm:text-lg sm:leading-8">
             Explore the front and back cover, then use Paynow to complete your order.
           </p>
 
-          <div className="mt-12 grid gap-7 md:grid-cols-2">
-            <figure className="rounded-3xl border border-ink/10 bg-white p-4">
+          <div className="mt-8 grid gap-5 sm:mt-10 sm:gap-6 md:grid-cols-2">
+            <figure className="mx-auto w-full max-w-md rounded-3xl border border-ink/10 bg-white p-3 sm:max-w-none sm:p-4">
               <img
                 src="/book/front-cover.jpeg"
                 alt="Book front cover"
@@ -82,7 +81,7 @@ export default function FindOurBook() {
                 Front cover
               </figcaption>
             </figure>
-            <figure className="rounded-3xl border border-ink/10 bg-white p-4">
+            <figure className="mx-auto w-full max-w-md rounded-3xl border border-ink/10 bg-white p-3 sm:max-w-none sm:p-4">
               <img
                 src="/book/back-cover.jpeg"
                 alt="Book back cover"
@@ -96,18 +95,18 @@ export default function FindOurBook() {
         </div>
       </section>
 
-      <section className="px-6 pb-20 lg:px-12 lg:pb-24">
-        <div className="mx-auto grid max-w-[1320px] gap-10 lg:grid-cols-[1fr_0.95fr]">
-          <article className="rounded-3xl border border-ink/10 bg-white p-7 lg:p-9">
+      <section className="px-4 pb-14 sm:px-6 sm:pb-16 lg:px-12 lg:pb-20">
+        <div className="mx-auto grid max-w-[1320px] gap-6 sm:gap-8 lg:grid-cols-[1fr_0.95fr] lg:gap-10">
+          <article className="rounded-3xl border border-ink/10 bg-white p-5 sm:p-7 lg:p-9">
             <p className="eyebrow">Paynow checkout</p>
-            <h2 className="mt-4 text-3xl font-medium tracking-[-0.04em]">
+            <h2 className="mt-4 text-2xl font-medium tracking-[-0.04em] sm:text-3xl">
               Complete your order
             </h2>
-            <p className="mt-4 max-w-xl leading-7 text-ink/65">
+            <p className="mt-3 max-w-xl text-sm leading-7 text-ink/65 sm:text-base">
               You will be redirected to Paynow to finish payment securely.
             </p>
 
-            <form onSubmit={onSubmit} className="mt-8 space-y-5">
+            <form onSubmit={onSubmit} className="mt-6 space-y-4 sm:mt-8 sm:space-y-5">
               <label className="block text-sm font-semibold text-ink/70">
                 Full name
                 <input
@@ -179,21 +178,30 @@ export default function FindOurBook() {
             </form>
           </article>
 
-          <article className="rounded-3xl border border-ink/10 bg-ink p-7 text-white lg:p-9">
-            <p className="eyebrow text-lime">Where to add API keys</p>
-            <h2 className="mt-4 text-3xl font-medium tracking-[-0.04em]">
-              Configure these in your environment
+          <article className="rounded-3xl border border-ink/10 bg-ink p-5 text-white sm:p-7 lg:p-9">
+            <p className="eyebrow text-lime">Deployment setup</p>
+            <h2 className="mt-4 text-2xl font-medium tracking-[-0.04em] sm:text-3xl">
+              Configure Paynow in Netlify
             </h2>
-            <p className="mt-4 leading-7 text-white/70">
-              Add these variables to your Netlify site environment variables:
+            <p className="mt-3 text-sm leading-7 text-white/70 sm:text-base">
+              API keys stay hidden server-side. Add them in Netlify environment variables.
             </p>
-            <pre className="mt-6 overflow-x-auto rounded-2xl border border-white/15 bg-white/5 p-4 text-xs leading-6 text-lime">
+            <button
+              type="button"
+              onClick={() => setShowEnvKeys((current) => !current)}
+              className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-lime transition hover:border-lime"
+            >
+              {showEnvKeys ? "Hide variable names" : "Show variable names"}
+            </button>
+            {showEnvKeys && (
+              <pre className="mt-5 overflow-x-auto rounded-2xl border border-white/15 bg-white/5 p-4 text-xs leading-6 text-lime">
 PAYNOW_INTEGRATION_ID=your_integration_id
 PAYNOW_INTEGRATION_KEY=your_integration_key
-PAYNOW_RETURN_URL=https://52hertz.co.zw/find-our-book
+PAYNOW_RETURN_URL=https://52hertz.co.zw/find-my-book
 PAYNOW_RESULT_URL=https://52hertz.co.zw/api/paynow/result
 BOOK_PRICE_USD=20
-            </pre>
+              </pre>
+            )}
           </article>
         </div>
       </section>
