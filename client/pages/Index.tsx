@@ -57,6 +57,7 @@ export default function Index() {
             <Link to="/#about" className="transition hover:text-lime">About</Link>
             <Link to="/#method" className="transition hover:text-lime">Method</Link>
             <Link to="/#services" className="transition hover:text-lime">Services</Link>
+            <Link to="/find-our-book" className="transition hover:text-lime">Find our Book</Link>
             <Link to="/#contact" className="rounded-full border border-white/30 px-5 py-2.5 text-white transition hover:border-lime hover:bg-lime hover:text-ink">Start a conversation</Link>
           </nav>
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white md:hidden" aria-label="Toggle menu">
@@ -64,7 +65,7 @@ export default function Index() {
           </button>
         </div>
         {isMenuOpen && <nav className="mx-6 rounded-2xl bg-ink p-5 text-white shadow-2xl md:hidden">
-          {[["About", "/#about"], ["Method", "/#method"], ["Services", "/#services"], ["Contact", "/#contact"]].map(([label, to]) => <Link key={label} to={to} onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">{label}<ChevronRight size={18} /></Link>)}
+          {[["About", "/#about"], ["Method", "/#method"], ["Services", "/#services"], ["Find our Book", "/find-our-book"], ["Contact", "/#contact"]].map(([label, to]) => <Link key={label} to={to} onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">{label}<ChevronRight size={18} /></Link>)}
         </nav>}
       </header>
 
