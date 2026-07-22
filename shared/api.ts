@@ -10,3 +10,18 @@
 export interface DemoResponse {
   message: string;
 }
+
+export interface PaynowInitiateRequest {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  quantity: number;
+}
+
+export interface PaynowInitiateResponse {
+  ok: boolean;
+  message: string;
+  redirectUrl?: string;
+  pollUrl?: string;
+  reference?: string;
+}
