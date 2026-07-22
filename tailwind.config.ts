@@ -13,7 +13,18 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["Manrope", "sans-serif"],
+        display: ["Playfair Display", "serif"],
+        mono: ["DM Mono", "monospace"],
+      },
       colors: {
+        sand: "#F5F1E8",
+        ink: "#182C28",
+        moss: "#1D3C35",
+        olive: "#4D5C33",
+        clay: "#9F5F47",
+        lime: "#C4F164",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
