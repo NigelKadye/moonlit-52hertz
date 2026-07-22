@@ -185,14 +185,13 @@ export default function FindOurBook() {
               Configure these in your environment
             </h2>
             <p className="mt-4 leading-7 text-white/70">
-              Add these variables to your local <code>.env</code> and Netlify environment
-              variables before going live:
+              Add these variables to your Netlify site environment variables:
             </p>
             <pre className="mt-6 overflow-x-auto rounded-2xl border border-white/15 bg-white/5 p-4 text-xs leading-6 text-lime">
 PAYNOW_INTEGRATION_ID=your_integration_id
 PAYNOW_INTEGRATION_KEY=your_integration_key
-PAYNOW_RETURN_URL=https://your-site.netlify.app/find-our-book
-PAYNOW_RESULT_URL=https://your-site.netlify.app/api/paynow/result
+PAYNOW_RETURN_URL=https://52hertz.co.zw/find-our-book
+PAYNOW_RESULT_URL=https://52hertz.co.zw/api/paynow/result
 BOOK_PRICE_USD=20
             </pre>
           </article>
