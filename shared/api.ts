@@ -25,3 +25,14 @@ export interface PaynowInitiateResponse {
   pollUrl?: string;
   reference?: string;
 }
+
+export interface ContactRequest {
+  name: string;
+  email: string;
+  message: string;
+}
+
+export interface ContactResponse {
+  ok: boolean;
+  message: string;
+}

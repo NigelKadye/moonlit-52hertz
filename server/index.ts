@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handlePaynowInitiate, handlePaynowResult } from "./routes/paynow";
+import { handleContact } from "./routes/contact";
 
 export function createServer() {
   const app = express();
@@ -21,6 +22,7 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
   app.post("/api/paynow/initiate", handlePaynowInitiate);
   app.post("/api/paynow/result", handlePaynowResult);
+  app.post("/api/contact", handleContact);
 
   return app;
 }

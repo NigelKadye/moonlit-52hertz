@@ -10,6 +10,14 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { ContactRequest, ContactResponse } from "@shared/api";
 
 const services = [
   ["01", "Continuous improvement", "Business development, process analysis, operations management and workspaces built to reduce waste."],
@@ -37,12 +45,53 @@ const method = [
 export default function Index() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogStatus, setDialogStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [dialogError, setDialogError] = useState("");
 
   const closeMenu = () => setIsMenuOpen(false);
+
+  const openConversationDialog = () => {
+    closeMenu();
+    setDialogStatus("idle");
+    setDialogError("");
+    setIsDialogOpen(true);
+  };
+
   const sendMessage = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSent(true);
     event.currentTarget.reset();
+  };
+
+  const sendDialogMessage = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setDialogStatus("sending");
+    setDialogError("");
+    const form = event.currentTarget;
+    const data: ContactRequest = {
+      name: (form.elements.namedItem("name") as HTMLInputElement).value,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
+    };
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const json: ContactResponse = await res.json();
+      if (!res.ok || !json.ok) {
+        setDialogError(json.message || "Something went wrong. Please try again.");
+        setDialogStatus("error");
+      } else {
+        setDialogStatus("sent");
+        form.reset();
+      }
+    } catch {
+      setDialogError("Could not send your message. Please email val@52hertz.co.zw directly.");
+      setDialogStatus("error");
+    }
   };
 
   return (
@@ -54,18 +103,20 @@ export default function Index() {
             <span className="text-lg font-semibold tracking-[-0.04em] text-white">hertz</span>
           </Link>
           <nav className="hidden items-center gap-8 text-sm font-medium text-white/75 md:flex">
-            <Link to="/#about" className="transition hover:text-lime">About</Link>
-            <Link to="/#method" className="transition hover:text-lime">Method</Link>
-            <Link to="/#services" className="transition hover:text-lime">Services</Link>
+            <a href="#about" className="transition hover:text-lime">About</a>
+            <a href="#services" className="transition hover:text-lime">Services</a>
+            <a href="#method" className="transition hover:text-lime">Approach</a>
             <Link to="/find-our-book" className="transition hover:text-lime">Find our Book</Link>
-            <Link to="/#contact" className="rounded-full border border-white/30 px-5 py-2.5 text-white transition hover:border-lime hover:bg-lime hover:text-ink">Start a conversation</Link>
+            <button onClick={openConversationDialog} className="rounded-full border border-white/30 px-5 py-2.5 text-white transition hover:border-lime hover:bg-lime hover:text-ink">Start a conversation</button>
           </nav>
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white md:hidden" aria-label="Toggle menu">
             {isMenuOpen ? <X size={21} /> : <Menu size={21} />}
           </button>
         </div>
         {isMenuOpen && <nav className="mx-6 rounded-2xl bg-ink p-5 text-white shadow-2xl md:hidden">
-          {[["About", "/#about"], ["Method", "/#method"], ["Services", "/#services"], ["Find our Book", "/find-our-book"], ["Contact", "/#contact"]].map(([label, to]) => <Link key={label} to={to} onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">{label}<ChevronRight size={18} /></Link>)}
+          {[["About", "#about"], ["Services", "#services"], ["Approach", "#method"]].map(([label, href]) => <a key={label} href={href} onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">{label}<ChevronRight size={18} /></a>)}
+          <Link to="/find-our-book" onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">Find our Book<ChevronRight size={18} /></Link>
+          <button onClick={openConversationDialog} className="flex w-full items-center justify-between border-b border-white/10 py-4 text-base last:border-0">Start a conversation<ChevronRight size={18} /></button>
         </nav>}
       </header>
 
@@ -76,7 +127,7 @@ export default function Index() {
             <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-lime"><Sparkles size={14} /> Continuous improvement specialists</div>
             <h1 className="max-w-4xl text-balance font-display text-[clamp(3.5rem,7.1vw,7.3rem)] font-medium leading-[0.91] tracking-[-0.075em]">Make performance <span className="text-lime">easier</span> to hear, measure and improve.</h1>
             <p className="mt-9 max-w-xl text-lg leading-8 text-white/70">52 Hertz helps teams make the most of their time and resources through simpler processes, stronger systems and meaningful work.</p>
-            <div className="mt-10 flex flex-wrap gap-4"><Link to="/#contact" className="inline-flex items-center gap-3 rounded-full bg-lime px-6 py-3.5 text-sm font-bold text-ink transition hover:bg-white">Build better systems <ArrowRight size={17} /></Link><Link to="/#about" className="inline-flex items-center gap-2 px-3 py-3.5 text-sm font-semibold text-white transition hover:text-lime">Our approach <ArrowDownRight size={17} /></Link></div>
+            <div className="mt-10 flex flex-wrap gap-4"><button onClick={openConversationDialog} className="inline-flex items-center gap-3 rounded-full bg-lime px-6 py-3.5 text-sm font-bold text-ink transition hover:bg-white">Build better systems <ArrowRight size={17} /></button><a href="#services" className="inline-flex items-center gap-2 px-3 py-3.5 text-sm font-semibold text-white transition hover:text-lime">Our approach <ArrowDownRight size={17} /></a></div>
           </div>
           <div className="justify-self-end lg:max-w-sm">
             <div className="rounded-[2rem] border border-white/10 bg-white/[0.05] p-7 backdrop-blur-sm">
@@ -111,6 +162,37 @@ export default function Index() {
       <section id="contact" className="scroll-mt-8 bg-lime px-6 py-24 lg:px-12 lg:py-32"><div className="mx-auto grid max-w-[1320px] gap-14 lg:grid-cols-[0.9fr_1.1fr]"><div><p className="eyebrow text-ink/60">Let’s begin</p><h2 className="section-title mt-5">Ready to build a business worth remarking about?</h2><p className="mt-7 max-w-md text-lg leading-8 text-ink/70">Whether you’re a start-up finding its footing, a leader developing your voice, or a larger organisation untangling bureaucracy, we are here to walk with you.</p><a href="mailto:val@52hertz.co.zw" className="mt-8 inline-flex items-center gap-2 text-lg font-bold underline decoration-2 underline-offset-4">val@52hertz.co.zw <ArrowRight size={18} /></a></div><form onSubmit={sendMessage} className="rounded-3xl bg-ink p-7 text-white shadow-xl lg:p-9"><p className="text-2xl font-medium">Share your story.</p><p className="mt-2 text-sm leading-6 text-white/60">We would love to hear what you are working towards.</p><div className="mt-8 grid gap-5 sm:grid-cols-2"><label className="form-label">Name<input required name="name" className="form-input" placeholder="Your name" /></label><label className="form-label">Email<input required name="email" type="email" className="form-input" placeholder="you@company.com" /></label></div><label className="form-label mt-5">What would you like to improve?<textarea required name="message" className="form-input min-h-32 resize-y" placeholder="Tell us a little about the challenge..." /></label><button type="submit" className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-lime px-5 py-4 text-sm font-bold text-ink transition hover:bg-white">{isSent ? "Thank you — we’ll be in touch" : "Send your message"}<ArrowRight size={17} /></button><p className="mt-4 text-center text-xs text-white/45">Or email us directly at val@52hertz.co.zw</p></form></div></section>
 
       <footer className="bg-ink px-6 py-9 text-white/60 lg:px-12"><div className="mx-auto flex max-w-[1320px] flex-col justify-between gap-5 sm:flex-row sm:items-center"><Link to="/" className="flex items-center gap-3 text-white"><span className="flex h-8 w-8 items-center justify-center rounded-full bg-lime text-xs font-bold text-ink">52</span><span className="font-semibold tracking-[-0.04em]">hertz</span></Link><p className="text-sm">Continuous improvement specialists · Harare, Zimbabwe</p><p className="text-sm">© {new Date().getFullYear()} 52Hertz</p></div></footer>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-lg bg-ink text-white border-white/15 p-0 overflow-hidden">
+          <div className="p-7 lg:p-9">
+            <DialogHeader className="mb-6">
+              <DialogTitle className="text-2xl font-medium tracking-[-0.04em] text-white">Start a conversation.</DialogTitle>
+              <DialogDescription className="text-sm leading-6 text-white/60">We would love to hear what you are working towards.</DialogDescription>
+            </DialogHeader>
+            {dialogStatus === "sent" ? (
+              <div className="py-6 text-center">
+                <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-lime"><Check size={22} strokeWidth={3} className="text-ink" /></span>
+                <p className="text-lg font-medium">Thank you — we'll be in touch.</p>
+                <button onClick={() => setIsDialogOpen(false)} className="mt-6 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white/70 transition hover:border-lime hover:text-lime">Close</button>
+              </div>
+            ) : (
+              <form onSubmit={sendDialogMessage} className="space-y-5">
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <label className="form-label">Name<input required name="name" className="form-input" placeholder="Your name" /></label>
+                  <label className="form-label">Email<input required name="email" type="email" className="form-input" placeholder="you@company.com" /></label>
+                </div>
+                <label className="form-label">What would you like to improve?<textarea required name="message" className="form-input min-h-28 resize-y" placeholder="Tell us a little about the challenge..." /></label>
+                {dialogStatus === "error" && <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">{dialogError}</p>}
+                <button type="submit" disabled={dialogStatus === "sending"} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-lime px-5 py-4 text-sm font-bold text-ink transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-70">
+                  {dialogStatus === "sending" ? "Sending…" : "Send your message"}<ArrowRight size={17} />
+                </button>
+                <p className="text-center text-xs text-white/40">Or email us at val@52hertz.co.zw</p>
+              </form>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
