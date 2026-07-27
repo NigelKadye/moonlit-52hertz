@@ -48,6 +48,20 @@ export const handleContact: RequestHandler = async (req, res) => {
   const safeEmail = escapeHtml(email.trim());
   const safeMessage = escapeHtml(message.trim()).replace(/\n/g, "<br/>");
 
+  // Prevent email header injection: strip control characters from subject fields
+  const subjectName = name.trim().replace(/[\r\n\t]/g, " ");
+  const replyToEmail = email.trim().replace(/[\r\n\t<>]/g, "");
+
+  // Basic email format check
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyToEmail)) {
+    const response: ContactResponse = {
+      ok: false,
+      message: "Please provide a valid email address.",
+    };
+    res.status(400).json(response);
+    return;
+  }
+
   const transporter = nodemailer.createTransport({
     host: smtpHost,
     port: smtpPort,
@@ -58,9 +72,9 @@ export const handleContact: RequestHandler = async (req, res) => {
   try {
     await transporter.sendMail({
       from: `"52Hertz Website" <${smtpUser}>`,
-      replyTo: `${name.trim()} <${email.trim()}>`,
+      replyTo: `${subjectName} <${replyToEmail}>`,
       to: TO_EMAIL,
-      subject: `New message from ${name.trim()}`,
+      subject: `New message from ${subjectName}`,
       text: `Name: ${name.trim()}\nEmail: ${email.trim()}\n\n${message.trim()}`,
       html: `<p><strong>Name:</strong> ${safeName}</p><p><strong>Email:</strong> ${safeEmail}</p><hr/><p>${safeMessage}</p>`,
     });
