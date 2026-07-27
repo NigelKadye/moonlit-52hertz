@@ -4,6 +4,15 @@ import { ContactRequest, ContactResponse } from "@shared/api";
 
 const TO_EMAIL = process.env.CONTACT_EMAIL ?? "val@52hertz.co.zw";
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 export const handleContact: RequestHandler = async (req, res) => {
   const { name, email, message } = req.body as ContactRequest;
 
@@ -35,6 +44,10 @@ export const handleContact: RequestHandler = async (req, res) => {
     return;
   }
 
+  const safeName = escapeHtml(name.trim());
+  const safeEmail = escapeHtml(email.trim());
+  const safeMessage = escapeHtml(message.trim()).replace(/\n/g, "<br/>");
+
   const transporter = nodemailer.createTransport({
     host: smtpHost,
     port: smtpPort,
@@ -42,14 +55,24 @@ export const handleContact: RequestHandler = async (req, res) => {
     auth: { user: smtpUser, pass: smtpPass },
   });
 
-  await transporter.sendMail({
-    from: `"52Hertz Website" <${smtpUser}>`,
-    replyTo: `${name.trim()} <${email.trim()}>`,
-    to: TO_EMAIL,
-    subject: `New message from ${name.trim()}`,
-    text: `Name: ${name.trim()}\nEmail: ${email.trim()}\n\n${message.trim()}`,
-    html: `<p><strong>Name:</strong> ${name.trim()}</p><p><strong>Email:</strong> ${email.trim()}</p><hr/><p>${message.trim().replace(/\n/g, "<br/>")}</p>`,
-  });
+  try {
+    await transporter.sendMail({
+      from: `"52Hertz Website" <${smtpUser}>`,
+      replyTo: `${name.trim()} <${email.trim()}>`,
+      to: TO_EMAIL,
+      subject: `New message from ${name.trim()}`,
+      text: `Name: ${name.trim()}\nEmail: ${email.trim()}\n\n${message.trim()}`,
+      html: `<p><strong>Name:</strong> ${safeName}</p><p><strong>Email:</strong> ${safeEmail}</p><hr/><p>${safeMessage}</p>`,
+    });
+  } catch (err) {
+    console.error("[contact] Failed to send email:", err);
+    const response: ContactResponse = {
+      ok: false,
+      message: "Failed to send your message. Please try again or email val@52hertz.co.zw directly.",
+    };
+    res.status(502).json(response);
+    return;
+  }
 
   const response: ContactResponse = { ok: true, message: "Message sent." };
   res.status(200).json(response);
