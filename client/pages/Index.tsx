@@ -54,18 +54,20 @@ export default function Index() {
             <span className="text-lg font-semibold tracking-[-0.04em] text-white">hertz</span>
           </Link>
           <nav className="hidden items-center gap-8 text-sm font-medium text-white/75 md:flex">
-            <Link to="/#about" className="transition hover:text-lime">About</Link>
-            <Link to="/#method" className="transition hover:text-lime">Method</Link>
-            <Link to="/#services" className="transition hover:text-lime">Services</Link>
+            <a href="#about" className="transition hover:text-lime">About</a>
+            <a href="#method" className="transition hover:text-lime">Method</a>
+            <a href="#services" className="transition hover:text-lime">Services</a>
             <Link to="/find-our-book" className="transition hover:text-lime">Find our Book</Link>
-            <Link to="/#contact" className="rounded-full border border-white/30 px-5 py-2.5 text-white transition hover:border-lime hover:bg-lime hover:text-ink">Start a conversation</Link>
+            <a href="#contact" className="rounded-full border border-white/30 px-5 py-2.5 text-white transition hover:border-lime hover:bg-lime hover:text-ink">Start a conversation</a>
           </nav>
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white md:hidden" aria-label="Toggle menu">
             {isMenuOpen ? <X size={21} /> : <Menu size={21} />}
           </button>
         </div>
         {isMenuOpen && <nav className="mx-6 rounded-2xl bg-ink p-5 text-white shadow-2xl md:hidden">
-          {[["About", "/#about"], ["Method", "/#method"], ["Services", "/#services"], ["Find our Book", "/find-our-book"], ["Contact", "/#contact"]].map(([label, to]) => <Link key={label} to={to} onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">{label}<ChevronRight size={18} /></Link>)}
+          {[["About", "#about"], ["Method", "#method"], ["Services", "#services"]].map(([label, href]) => <a key={label} href={href} onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">{label}<ChevronRight size={18} /></a>)}
+          <Link to="/find-our-book" onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">Find our Book<ChevronRight size={18} /></Link>
+          <a href="#contact" onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">Contact<ChevronRight size={18} /></a>
         </nav>}
       </header>
 
@@ -76,7 +78,7 @@ export default function Index() {
             <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-lime"><Sparkles size={14} /> Continuous improvement specialists</div>
             <h1 className="max-w-4xl text-balance font-display text-[clamp(3.5rem,7.1vw,7.3rem)] font-medium leading-[0.91] tracking-[-0.075em]">Make performance <span className="text-lime">easier</span> to hear, measure and improve.</h1>
             <p className="mt-9 max-w-xl text-lg leading-8 text-white/70">52 Hertz helps teams make the most of their time and resources through simpler processes, stronger systems and meaningful work.</p>
-            <div className="mt-10 flex flex-wrap gap-4"><Link to="/#contact" className="inline-flex items-center gap-3 rounded-full bg-lime px-6 py-3.5 text-sm font-bold text-ink transition hover:bg-white">Build better systems <ArrowRight size={17} /></Link><Link to="/#about" className="inline-flex items-center gap-2 px-3 py-3.5 text-sm font-semibold text-white transition hover:text-lime">Our approach <ArrowDownRight size={17} /></Link></div>
+            <div className="mt-10 flex flex-wrap gap-4"><a href="#contact" className="inline-flex items-center gap-3 rounded-full bg-lime px-6 py-3.5 text-sm font-bold text-ink transition hover:bg-white">Build better systems <ArrowRight size={17} /></a><a href="#about" className="inline-flex items-center gap-2 px-3 py-3.5 text-sm font-semibold text-white transition hover:text-lime">Our approach <ArrowDownRight size={17} /></a></div>
           </div>
           <div className="justify-self-end lg:max-w-sm">
             <div className="rounded-[2rem] border border-white/10 bg-white/[0.05] p-7 backdrop-blur-sm">
