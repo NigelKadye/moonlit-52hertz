@@ -27,8 +27,14 @@ export default function FindOurBook() {
   useEffect(() => {
     fetch("/api/paynow/config")
       .then((res) => res.json())
-      .then((data: PaynowConfigResponse) => setHostedUrl(data.billPaymentUrl))
-      .catch(() => setHostedUrl(null));
+      .then((data: PaynowConfigResponse) => {
+        setHostedUrl(data.billPaymentUrl);
+        if (!data.billPaymentUrl) setPaymentMode("direct");
+      })
+      .catch(() => {
+        setHostedUrl(null);
+        setPaymentMode("direct");
+      });
   }, []);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -116,8 +122,9 @@ export default function FindOurBook() {
               You will be redirected to Paynow to finish payment securely.
             </p>
 
-            {/* Payment mode toggle */}
+            {/* Payment mode toggle – only show hosted option when the URL is available */}
             <div className="mt-6 inline-flex rounded-full border border-ink/15 bg-sand p-1">
+              {hostedUrl && (
               <button
                 type="button"
                 onClick={() => setPaymentMode("hosted")}
@@ -129,6 +136,7 @@ export default function FindOurBook() {
               >
                 Hosted Paynow Link
               </button>
+              )}
               <button
                 type="button"
                 onClick={() => setPaymentMode("direct")}
