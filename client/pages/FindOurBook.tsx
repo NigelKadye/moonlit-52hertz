@@ -1,7 +1,7 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import { PaynowInitiateResponse } from "@shared/api";
+import { ArrowRight, ExternalLink } from "lucide-react";
+import { PaynowConfigResponse, PaynowInitiateResponse } from "@shared/api";
 
 type PaymentForm = {
   customerName: string;
@@ -21,6 +21,15 @@ export default function FindOurBook() {
   const [form, setForm] = useState<PaymentForm>(initialForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [paymentMode, setPaymentMode] = useState<"hosted" | "direct">("hosted");
+  const [hostedUrl, setHostedUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/paynow/config")
+      .then((res) => res.json())
+      .then((data: PaynowConfigResponse) => setHostedUrl(data.billPaymentUrl))
+      .catch(() => setHostedUrl(null));
+  }, []);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -107,76 +116,133 @@ export default function FindOurBook() {
               You will be redirected to Paynow to finish payment securely.
             </p>
 
-            <form onSubmit={onSubmit} className="mt-8 space-y-5">
-              <label className="block text-sm font-semibold text-ink/70">
-                Full name
-                <input
-                  required
-                  value={form.customerName}
-                  onChange={(event) =>
-                    setForm((current) => ({ ...current, customerName: event.target.value }))
-                  }
-                  className="mt-2 w-full rounded-xl border border-ink/20 bg-sand px-4 py-3 text-sm outline-none focus:border-olive focus:ring-1 focus:ring-olive"
-                  placeholder="Your name"
-                />
-              </label>
-              <label className="block text-sm font-semibold text-ink/70">
-                Email
-                <input
-                  required
-                  type="email"
-                  value={form.customerEmail}
-                  onChange={(event) =>
-                    setForm((current) => ({ ...current, customerEmail: event.target.value }))
-                  }
-                  className="mt-2 w-full rounded-xl border border-ink/20 bg-sand px-4 py-3 text-sm outline-none focus:border-olive focus:ring-1 focus:ring-olive"
-                  placeholder="you@example.com"
-                />
-              </label>
-              <label className="block text-sm font-semibold text-ink/70">
-                Phone number
-                <input
-                  required
-                  value={form.customerPhone}
-                  onChange={(event) =>
-                    setForm((current) => ({ ...current, customerPhone: event.target.value }))
-                  }
-                  className="mt-2 w-full rounded-xl border border-ink/20 bg-sand px-4 py-3 text-sm outline-none focus:border-olive focus:ring-1 focus:ring-olive"
-                  placeholder="+263..."
-                />
-              </label>
-              <label className="block text-sm font-semibold text-ink/70">
-                Quantity
-                <input
-                  required
-                  type="number"
-                  min={1}
-                  value={form.quantity}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      quantity: Number(event.target.value),
-                    }))
-                  }
-                  className="mt-2 w-full rounded-xl border border-ink/20 bg-sand px-4 py-3 text-sm outline-none focus:border-olive focus:ring-1 focus:ring-olive"
-                />
-              </label>
-
-              {error && (
-                <p className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
-                  {error}
-                </p>
-              )}
-
+            {/* Payment mode toggle */}
+            <div className="mt-6 inline-flex rounded-full border border-ink/15 bg-sand p-1">
               <button
-                type="submit"
-                disabled={isSubmitting}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-4 text-sm font-bold text-lime transition hover:bg-olive disabled:cursor-not-allowed disabled:opacity-70"
+                type="button"
+                onClick={() => setPaymentMode("hosted")}
+                className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
+                  paymentMode === "hosted"
+                    ? "bg-ink text-lime"
+                    : "text-ink/60 hover:text-ink"
+                }`}
               >
-                {isSubmitting ? "Preparing payment..." : "Pay with Paynow"}
-                <ArrowRight size={17} />
+                Hosted Paynow Link
               </button>
-            </form>
+              <button
+                type="button"
+                onClick={() => setPaymentMode("direct")}
+                className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
+                  paymentMode === "direct"
+                    ? "bg-ink text-lime"
+                    : "text-ink/60 hover:text-ink"
+                }`}
+              >
+                Direct API Initiation
+              </button>
+            </div>
+
+            {paymentMode === "hosted" ? (
+              <div className="mt-8">
+                <p className="text-sm leading-6 text-ink/65">
+                  Opens the secure Paynow BillPayment page in a new tab. No form
+                  data is sent to our server — payment is handled entirely by
+                  Paynow.
+                </p>
+                {hostedUrl ? (
+                  <a
+                    href={hostedUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-4 text-sm font-bold text-lime transition hover:bg-olive"
+                  >
+                    Pay with Paynow (Hosted)
+                    <ExternalLink size={17} />
+                  </a>
+                ) : (
+                  <p className="mt-6 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+                    Hosted payment link is not configured. Set{" "}
+                    <code className="font-mono">PAYNOW_BILLPAYMENT_URL</code> in
+                    your environment or switch to Direct API Initiation.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <form onSubmit={onSubmit} className="mt-8 space-y-5">
+                <p className="text-sm leading-6 text-ink/65">
+                  Submits your details to our server, which calls the Paynow API
+                  directly and redirects you to a unique payment page.
+                </p>
+                <label className="block text-sm font-semibold text-ink/70">
+                  Full name
+                  <input
+                    required
+                    value={form.customerName}
+                    onChange={(event) =>
+                      setForm((current) => ({ ...current, customerName: event.target.value }))
+                    }
+                    className="mt-2 w-full rounded-xl border border-ink/20 bg-sand px-4 py-3 text-sm outline-none focus:border-olive focus:ring-1 focus:ring-olive"
+                    placeholder="Your name"
+                  />
+                </label>
+                <label className="block text-sm font-semibold text-ink/70">
+                  Email
+                  <input
+                    required
+                    type="email"
+                    value={form.customerEmail}
+                    onChange={(event) =>
+                      setForm((current) => ({ ...current, customerEmail: event.target.value }))
+                    }
+                    className="mt-2 w-full rounded-xl border border-ink/20 bg-sand px-4 py-3 text-sm outline-none focus:border-olive focus:ring-1 focus:ring-olive"
+                    placeholder="you@example.com"
+                  />
+                </label>
+                <label className="block text-sm font-semibold text-ink/70">
+                  Phone number
+                  <input
+                    required
+                    value={form.customerPhone}
+                    onChange={(event) =>
+                      setForm((current) => ({ ...current, customerPhone: event.target.value }))
+                    }
+                    className="mt-2 w-full rounded-xl border border-ink/20 bg-sand px-4 py-3 text-sm outline-none focus:border-olive focus:ring-1 focus:ring-olive"
+                    placeholder="+263..."
+                  />
+                </label>
+                <label className="block text-sm font-semibold text-ink/70">
+                  Quantity
+                  <input
+                    required
+                    type="number"
+                    min={1}
+                    value={form.quantity}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        quantity: Number(event.target.value),
+                      }))
+                    }
+                    className="mt-2 w-full rounded-xl border border-ink/20 bg-sand px-4 py-3 text-sm outline-none focus:border-olive focus:ring-1 focus:ring-olive"
+                  />
+                </label>
+
+                {error && (
+                  <p className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {error}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-4 text-sm font-bold text-lime transition hover:bg-olive disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {isSubmitting ? "Preparing payment..." : "Pay with Paynow"}
+                  <ArrowRight size={17} />
+                </button>
+              </form>
+            )}
           </article>
 
           <article className="rounded-3xl border border-ink/10 bg-ink p-7 text-white lg:p-9">
@@ -193,6 +259,7 @@ PAYNOW_INTEGRATION_KEY=your_integration_key
 PAYNOW_RETURN_URL=https://52hertz.co.zw/find-our-book
 PAYNOW_RESULT_URL=https://52hertz.co.zw/api/paynow/result
 BOOK_PRICE_USD=20
+PAYNOW_BILLPAYMENT_URL=https://www.paynow.co.zw/Payment/BillPaymentLink/?q=...
             </pre>
           </article>
         </div>
