@@ -81,7 +81,7 @@ export default function FindOurBook() {
       <section className="px-6 py-16 lg:px-12 lg:py-24">
         <div className="mx-auto max-w-[1320px]">
           <p className="eyebrow">Book</p>
-          <h1 className="section-title mt-5">Find our Book</h1>
+          <h1 className="section-title mt-5">Find my Book</h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-ink/70">
             Explore the front and back cover, then use Paynow to complete your order.
           </p>
