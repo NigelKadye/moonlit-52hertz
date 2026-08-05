@@ -8,7 +8,10 @@ import {
 const PAYNOW_INITIATE_URL =
   process.env.PAYNOW_INITIATE_URL ??
   "https://www.paynow.co.zw/interface/initiatetransaction";
-const BOOK_PRICE_USD = Number(process.env.BOOK_PRICE_USD ?? "20");
+const BOOK_PRICES_USD = {
+  digital: Number(process.env.BOOK_PRICE_DIGITAL_USD ?? "12.95"),
+  hard: Number(process.env.BOOK_PRICE_HARD_USD ?? "19.95"),
+} as const;
 
 function generatePaynowHash(fields: Array<[string, string]>, integrationKey: string) {
   const concatenatedValues = fields
@@ -39,43 +42,47 @@ export const handlePaynowInitiate: RequestHandler = async (req, res) => {
     return;
   }
 
-  if (!Number.isFinite(BOOK_PRICE_USD) || BOOK_PRICE_USD <= 0) {
-    const response: PaynowInitiateResponse = {
-      ok: false,
-      message: "BOOK_PRICE_USD must be a valid positive number.",
-    };
-    res.status(500).json(response);
-    return;
-  }
-
   const body = req.body as PaynowInitiateRequest;
   const quantity = Number(body.quantity);
   const customerName = body.customerName?.trim();
   const customerEmail = body.customerEmail?.trim();
   const customerPhone = body.customerPhone?.trim();
+  const bookFormat = body.bookFormat;
+  const unitPrice = BOOK_PRICES_USD[bookFormat];
 
   if (
     !customerName ||
     !customerEmail ||
     !customerPhone ||
+    (bookFormat !== "digital" && bookFormat !== "hard") ||
     !Number.isInteger(quantity) ||
     quantity < 1
   ) {
     const response: PaynowInitiateResponse = {
       ok: false,
-      message: "Please provide name, email, phone and a valid quantity.",
+      message: "Please provide name, email, phone, book format and a valid quantity.",
     };
     res.status(400).json(response);
     return;
   }
 
+  if (!Number.isFinite(unitPrice) || unitPrice <= 0) {
+    const response: PaynowInitiateResponse = {
+      ok: false,
+      message: "Book price configuration is invalid.",
+    };
+    res.status(500).json(response);
+    return;
+  }
+
   const reference = `BOOK-${Date.now()}`;
-  const totalAmount = (BOOK_PRICE_USD * quantity).toFixed(2);
+  const totalAmount = (unitPrice * quantity).toFixed(2);
+  const formatLabel = bookFormat === "digital" ? "Digital Book" : "Hard Book";
   const fields: Array<[string, string]> = [
     ["id", integrationId],
     ["reference", reference],
     ["amount", totalAmount],
-    ["additionalinfo", `Book order x${quantity}`],
+    ["additionalinfo", `${formatLabel} order x${quantity}`],
     ["returnurl", returnUrl],
     ["resulturl", resultUrl],
     ["authemail", customerEmail],

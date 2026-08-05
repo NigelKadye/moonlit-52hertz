@@ -8,6 +8,7 @@ type PaymentForm = {
   customerEmail: string;
   customerPhone: string;
   quantity: number;
+  bookFormat: "digital" | "hard";
 };
 
 const initialForm: PaymentForm = {
@@ -15,7 +16,23 @@ const initialForm: PaymentForm = {
   customerEmail: "",
   customerPhone: "",
   quantity: 1,
+  bookFormat: "digital",
 };
+
+const bookOptions = [
+  {
+    value: "digital" as const,
+    label: "Digital Book",
+    price: 12.95,
+    description: "Instant digital access.",
+  },
+  {
+    value: "hard" as const,
+    label: "Hard Book",
+    price: 19.95,
+    description: "Printed copy delivered to you.",
+  },
+];
 
 export default function FindOurBook() {
   const [form, setForm] = useState<PaymentForm>(initialForm);
@@ -119,8 +136,36 @@ export default function FindOurBook() {
               Complete your order
             </h2>
             <p className="mt-4 max-w-xl leading-7 text-ink/65">
-              You will be redirected to Paynow to finish payment securely.
+              Choose your format and continue to Paynow to complete your order securely.
             </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {bookOptions.map((option) => {
+                const isSelected = form.bookFormat === option.value;
+
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() =>
+                      setForm((current) => ({ ...current, bookFormat: option.value }))
+                    }
+                    className={`rounded-2xl border p-5 text-left transition ${
+                      isSelected
+                        ? "border-ink bg-ink text-white"
+                        : "border-ink/10 bg-sand text-ink hover:border-ink/30"
+                    }`}
+                  >
+                    <p className="text-sm font-semibold uppercase tracking-[0.18em] opacity-70">
+                      {option.label}
+                    </p>
+                    <p className="mt-3 text-3xl font-medium tracking-[-0.04em]">
+                      ${option.price.toFixed(2)}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 opacity-75">{option.description}</p>
+                  </button>
+                );
+              })}
+            </div>
 
             {/* Payment mode toggle – only show hosted option when the URL is available */}
             <div className="mt-6 inline-flex rounded-full border border-ink/15 bg-sand p-1">
@@ -153,9 +198,7 @@ export default function FindOurBook() {
             {paymentMode === "hosted" ? (
               <div className="mt-8">
                 <p className="text-sm leading-6 text-ink/65">
-                  Opens the secure Paynow BillPayment page in a new tab. No form
-                  data is sent to our server — payment is handled entirely by
-                  Paynow.
+                  Opens the secure Paynow BillPayment page in a new tab for checkout.
                 </p>
                 {hostedUrl ? (
                   <a
@@ -181,6 +224,16 @@ export default function FindOurBook() {
                   Submits your details to our server, which calls the Paynow API
                   directly and redirects you to a unique payment page.
                 </p>
+                <div className="rounded-2xl border border-ink/10 bg-sand px-4 py-3 text-sm text-ink/70">
+                  Selected:{" "}
+                  <span className="font-semibold text-ink">
+                    {bookOptions.find((option) => option.value === form.bookFormat)?.label}
+                  </span>{" "}
+                  · $
+                  {bookOptions
+                    .find((option) => option.value === form.bookFormat)
+                    ?.price.toFixed(2)}
+                </div>
                 <label className="block text-sm font-semibold text-ink/70">
                   Full name
                   <input
@@ -254,21 +307,33 @@ export default function FindOurBook() {
           </article>
 
           <article className="rounded-3xl border border-ink/10 bg-ink p-7 text-white lg:p-9">
-            <p className="eyebrow text-lime">Where to add API keys</p>
+            <p className="eyebrow text-lime">Paynow details</p>
             <h2 className="mt-4 text-3xl font-medium tracking-[-0.04em]">
-              Configure these in your environment
+              Paynow checkout
             </h2>
             <p className="mt-4 leading-7 text-white/70">
-              Add these variables to your Netlify site environment variables:
+              Complete your order using the option that suits you best.
             </p>
-            <pre className="mt-6 overflow-x-auto rounded-2xl border border-white/15 bg-white/5 p-4 text-xs leading-6 text-lime">
-PAYNOW_INTEGRATION_ID=your_integration_id
-PAYNOW_INTEGRATION_KEY=your_integration_key
-PAYNOW_RETURN_URL=https://52hertz.co.zw/find-our-book
-PAYNOW_RESULT_URL=https://52hertz.co.zw/api/paynow/result
-BOOK_PRICE_USD=20
-PAYNOW_BILLPAYMENT_URL=https://www.paynow.co.zw/Payment/BillPaymentLink/?q=...
-            </pre>
+            <div className="mt-6 space-y-4 rounded-2xl border border-white/15 bg-white/5 p-5">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lime">
+                  Digital Book
+                </p>
+                <p className="mt-2 text-2xl font-medium">$12.95</p>
+                <p className="mt-2 text-sm leading-6 text-white/70">
+                  Best for instant access through Paynow checkout.
+                </p>
+              </div>
+              <div className="border-t border-white/10 pt-4">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lime">
+                  Hard Book
+                </p>
+                <p className="mt-2 text-2xl font-medium">$19.95</p>
+                <p className="mt-2 text-sm leading-6 text-white/70">
+                  Choose the printed edition and finish payment with Paynow.
+                </p>
+              </div>
+            </div>
           </article>
         </div>
       </section>
