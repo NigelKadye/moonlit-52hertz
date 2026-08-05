@@ -36,3 +36,7 @@ export interface ContactResponse {
   ok: boolean;
   message: string;
 }
+
+export interface PaynowConfigResponse {
+  billPaymentUrl: string | null;
+}
