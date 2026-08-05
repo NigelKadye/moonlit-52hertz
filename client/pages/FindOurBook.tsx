@@ -266,6 +266,19 @@ export default function FindOurBook() {
                 </p>
               </div>
             </div>
+            <div className="mt-6">
+              <a
+                href="https://www.paynow.co.zw/Payment/BillPaymentLink/?q=aWQ9MjYwNjcmYW1vdW50PTE5Ljk1JmFtb3VudF9xdWFudGl0eT0wLjAwJmw9MQ%3d%3d"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src="https://www.paynow.co.zw/Content/Buttons/Medium_buttons/button_buy-now_medium.png"
+                  alt="Buy now with Paynow"
+                  className="h-auto"
+                />
+              </a>
+            </div>
           </article>
         </div>
       </section>
