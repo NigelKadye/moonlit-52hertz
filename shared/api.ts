@@ -16,6 +16,7 @@ export interface PaynowInitiateRequest {
   customerEmail: string;
   customerPhone: string;
   quantity: number;
+  bookFormat: "digital" | "hard";
 }
 
 export interface PaynowInitiateResponse {
