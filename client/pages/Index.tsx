@@ -106,7 +106,7 @@ export default function Index() {
             <a href="#about" className="transition hover:text-lime">About</a>
             <a href="#services" className="transition hover:text-lime">Services</a>
             <a href="#method" className="transition hover:text-lime">Approach</a>
-            <Link to="/find-our-book" className="transition hover:text-lime">Find our Book</Link>
+            <Link to="/find-our-book" className="transition hover:text-lime">Find my Book</Link>
             <button onClick={openConversationDialog} className="rounded-full border border-white/30 px-5 py-2.5 text-white transition hover:border-lime hover:bg-lime hover:text-ink">Start a conversation</button>
           </nav>
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white md:hidden" aria-label="Toggle menu">
@@ -115,7 +115,7 @@ export default function Index() {
         </div>
         {isMenuOpen && <nav className="mx-6 rounded-2xl bg-ink p-5 text-white shadow-2xl md:hidden">
           {[["About", "#about"], ["Services", "#services"], ["Approach", "#method"]].map(([label, href]) => <a key={label} href={href} onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">{label}<ChevronRight size={18} /></a>)}
-          <Link to="/find-our-book" onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">Find our Book<ChevronRight size={18} /></Link>
+          <Link to="/find-our-book" onClick={closeMenu} className="flex items-center justify-between border-b border-white/10 py-4 text-base last:border-0">Find my Book<ChevronRight size={18} /></Link>
           <button onClick={openConversationDialog} className="flex w-full items-center justify-between border-b border-white/10 py-4 text-base last:border-0">Start a conversation<ChevronRight size={18} /></button>
         </nav>}
       </header>

@@ -87,15 +87,26 @@ export const handlePaynowInitiate: RequestHandler = async (req, res) => {
   const hash = generatePaynowHash(fields, integrationKey);
   const payload = new URLSearchParams([...fields, ["hash", hash]]);
 
-  const paynowResponse = await fetch(PAYNOW_INITIATE_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: payload.toString(),
-  });
+  let paynowResponse: Response;
+  let responseText: string;
+  try {
+    paynowResponse = await fetch(PAYNOW_INITIATE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: payload.toString(),
+    });
+    responseText = await paynowResponse.text();
+  } catch (err) {
+    const response: PaynowInitiateResponse = {
+      ok: false,
+      message: "Could not reach Paynow. Please check your connection and try again.",
+    };
+    res.status(502).json(response);
+    return;
+  }
 
-  const responseText = await paynowResponse.text();
   const params = new URLSearchParams(responseText);
 
   if (!paynowResponse.ok || params.get("status")?.toLowerCase() !== "ok") {
