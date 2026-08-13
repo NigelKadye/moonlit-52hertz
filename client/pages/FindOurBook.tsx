@@ -251,7 +251,20 @@ export default function FindOurBook() {
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lime">
                   Digital Book
                 </p>
-                <p className="mt-2 text-2xl font-medium">$14.95</p>
+                <div className="mt-2 flex items-center justify-between">
+                  <p className="text-2xl font-medium">$14.95</p>
+                  <a
+                    href='https://www.paynow.co.zw/Payment/Link/?q=c2VhcmNoPXZ0c2FuZHVyYSU0MGljbG91ZC5jb20mYW1vdW50PTE0Ljk1JnJlZmVyZW5jZT0mbD0w'
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="https://www.paynow.co.zw/Content/Buttons/Medium_buttons/button_buy-now_medium.png"
+                      alt="Buy now with Paynow - Digital Copy"
+                      className="h-auto max-w-[120px]"
+                    />
+                  </a>
+                </div>
                 <p className="mt-2 text-sm leading-6 text-white/70">
                   Best for instant access through Paynow checkout.
                 </p>
@@ -260,35 +273,24 @@ export default function FindOurBook() {
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lime">
                   Hard Book
                 </p>
-                <p className="mt-2 text-2xl font-medium">$19.95</p>
+                <div className="mt-2 flex items-center justify-between">
+                  <p className="text-2xl font-medium">$19.95</p>
+                  <a
+                    href="https://www.paynow.co.zw/Payment/BillPaymentLink/?q=aWQ9MjYwNjcmYW1vdW50PTE5Ljk1JmFtb3VudF9xdWFudGl0eT0wLjAwJmw9MQ%3d%3d"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="https://www.paynow.co.zw/Content/Buttons/Medium_buttons/button_buy-now_medium.png"
+                      alt="Buy now with Paynow - Hard Copy"
+                      className="h-auto max-w-[120px]"
+                    />
+                  </a>
+                </div>
                 <p className="mt-2 text-sm leading-6 text-white/70">
                   Choose the printed edition and finish payment with Paynow.
                 </p>
               </div>
-            </div>
-            <div className="mt-6 space-y-3">
-              <a
-                href='https://www.paynow.co.zw/Payment/Link/?q=c2VhcmNoPXZ0c2FuZHVyYSU0MGljbG91ZC5jb20mYW1vdW50PTE0Ljk1JnJlZmVyZW5jZT0mbD0w'
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src="https://www.paynow.co.zw/Content/Buttons/Medium_buttons/button_buy-now_medium.png"
-                  alt="Buy now with Paynow - Digital Copy"
-                  className="h-auto"
-                />
-              </a>
-              <a
-                href="https://www.paynow.co.zw/Payment/BillPaymentLink/?q=aWQ9MjYwNjcmYW1vdW50PTE5Ljk1JmFtb3VudF9xdWFudGl0eT0wLjAwJmw9MQ%3d%3d"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src="https://www.paynow.co.zw/Content/Buttons/Medium_buttons/button_buy-now_medium.png"
-                  alt="Buy now with Paynow - Hard Copy"
-                  className="h-auto"
-                />
-              </a>
             </div>
           </article>
         </div>
