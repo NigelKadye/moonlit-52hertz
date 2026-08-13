@@ -23,7 +23,7 @@ const bookOptions = [
   {
     value: "digital" as const,
     label: "Digital Book",
-    price: 12.95,
+    price: 14.95,
     description: "Instant digital access.",
   },
   {
@@ -251,7 +251,7 @@ export default function FindOurBook() {
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lime">
                   Digital Book
                 </p>
-                <p className="mt-2 text-2xl font-medium">$12.95</p>
+                <p className="mt-2 text-2xl font-medium">$14.95</p>
                 <p className="mt-2 text-sm leading-6 text-white/70">
                   Best for instant access through Paynow checkout.
                 </p>
