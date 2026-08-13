@@ -230,7 +230,7 @@ export default function FindOurBook() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-4 text-sm font-bold text-lime transition hover:bg-olive disabled:cursor-not-allowed disabled:opacity-70"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-4 text-sm font-bold text-lime transition hover:bg-olive disabled:cursor-not-allowed dis[...]"
               >
                 {isSubmitting ? "Preparing payment..." : "Pay with Paynow"}
                 <ArrowRight size={17} />
@@ -266,7 +266,18 @@ export default function FindOurBook() {
                 </p>
               </div>
             </div>
-            <div className="mt-6">
+            <div className="mt-6 space-y-3">
+              <a
+                href='https://www.paynow.co.zw/Payment/Link/?q=c2VhcmNoPXZ0c2FuZHVyYSU0MGljbG91ZC5jb20mYW1vdW50PTE0Ljk1JnJlZmVyZW5jZT0mbD0w'
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src="https://www.paynow.co.zw/Content/Buttons/Medium_buttons/button_buy-now_medium.png"
+                  alt="Buy now with Paynow - Digital Copy"
+                  className="h-auto"
+                />
+              </a>
               <a
                 href="https://www.paynow.co.zw/Payment/BillPaymentLink/?q=aWQ9MjYwNjcmYW1vdW50PTE5Ljk1JmFtb3VudF9xdWFudGl0eT0wLjAwJmw9MQ%3d%3d"
                 target="_blank"
@@ -274,7 +285,7 @@ export default function FindOurBook() {
               >
                 <img
                   src="https://www.paynow.co.zw/Content/Buttons/Medium_buttons/button_buy-now_medium.png"
-                  alt="Buy now with Paynow"
+                  alt="Buy now with Paynow - Hard Copy"
                   className="h-auto"
                 />
               </a>
