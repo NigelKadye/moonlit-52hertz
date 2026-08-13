@@ -254,7 +254,7 @@ export default function FindOurBook() {
                 <div className="mt-2 flex items-center justify-between">
                   <p className="text-2xl font-medium">$14.95</p>
                   <a
-                    href='https://www.paynow.co.zw/Payment/Link/?q=c2VhcmNoPXZ0c2FuZHVyYSU0MGljbG91ZC5jb20mYW1vdW50PTEuMDAmcmVmZXJlbmNlPSZsPTA%3d'
+                    href='https://www.paynow.co.zw/Payment/Link/?q=c2VhcmNoPXZ0c2FuZHVyYSU0MGljbG91ZC5jb20mYW1vdW50PTE0Ljk1JnJlZmVyZW5jZT0mbD0w'
                     target="_blank"
                     rel="noopener noreferrer"
                   >
