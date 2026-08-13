@@ -254,7 +254,7 @@ export default function FindOurBook() {
                 <div className="mt-2 flex items-center justify-between">
                   <p className="text-2xl font-medium">$14.95</p>
                   <a
-                    href='https://www.paynow.co.zw/Payment/Link/?q=c2VhcmNoPXZ0c2FuZHVyYSU0MGljbG91ZC5jb20mYW1vdW50PTE0Ljk1JnJlZmVyZW5jZT0mbD0w'
+                    href='https://www.paynow.co.zw/Payment/Link/?q=c2VhcmNoPXZ0c2FuZHVyYSU0MGljbG91ZC5jb20mYW1vdW50PTEuMDAmcmVmZXJlbmNlPSZsPTA%3d'
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -262,6 +262,7 @@ export default function FindOurBook() {
                       src="https://www.paynow.co.zw/Content/Buttons/Medium_buttons/button_buy-now_medium.png"
                       alt="Buy now with Paynow - Digital Copy"
                       className="h-auto max-w-[120px]"
+                      style={{border: 0}}
                     />
                   </a>
                 </div>
