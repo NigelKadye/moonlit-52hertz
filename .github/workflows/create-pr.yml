@@ -1,0 +1,49 @@
+name: Create PR for Greep checkout
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create pull request
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Creating PR from feature/greep-checkout → main"
+          PR_BODY=$(cat <<'BODY'
+Adds Greep checkout integration to the Find My Book flow.
+
+Summary:
+- server/routes/greep.ts — POST /api/greep/create-session and POST /api/greep/webhook (address collection, shipping for hard copies, logs webhook events).
+- server/index.ts — registered the Greep endpoints.
+- shared/api.ts — added shared request/response types for Greep.
+- client/pages/FindOurBook.tsx — address fields, payment-provider selector (Greep default), wired Greep flow to /api/greep/create-session (keeps Paynow option).
+- client/pages/FindOurBookSuccess.tsx — success page.
+- client/App.tsx — route for /find-our-book/success.
+- .env.example — GREEP_* placeholders (UUID included as example).
+
+Env vars to set:
+- GREEP_API_KEY, GREEP_MERCHANT_UUID, GREEP_RETURN_URL, GREEP_CANCEL_URL
+
+Testing: copy .env.example → .env, pnpm dev, open /find-our-book, fill the form and submit to test redirect.
+
+Webhook note: the webhook handler currently logs events; implement signature verification if Greep provides a secret.
+BODY
+          )
+
+          RESPONSE=$(curl -s -X POST "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls" \
+            -H "Authorization: token ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -d "{\"title\": \"feat: add Greep checkout option + webhook\", \"head\": \"feature/greep-checkout\", \"base\": \"main\", \"body\": \"${PR_BODY//"/\\\"}\"}")
+
+          echo "$RESPONSE" | jq .
